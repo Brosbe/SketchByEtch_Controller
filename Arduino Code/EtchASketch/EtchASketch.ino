@@ -1,9 +1,8 @@
 #include <ResponsiveAnalogRead.h>
 
-byte value[1];
+char value[1];
 int prevVal = 0;
 int val;
-
 bool prevPress1 = LOW;
 bool prevPress2 = LOW;
 bool curPress;
@@ -16,7 +15,8 @@ void setup() {
   pinMode(A0, INPUT);
   pinMode(A1, INPUT);
   pinMode(3, INPUT);
-  Serial.begin(9600);
+  Serial.begin(19200);
+  analogReadResolution(12);
 }
 
 void loop() {
@@ -28,18 +28,14 @@ void loop() {
   {
     analog1.update();
     analog2.update();
-    sender = String(analog1.getValue(), DEC);
+    sender = String((int)(analog1.getValue()/3.673), DEC);
     sender += ",";
-    part = String(analog2.getValue(), DEC);
+    part = String((int)(analog2.getValue()/3.673), DEC);
     sender += part;
     sender += "|";
     curPress = digitalRead(3);
     sender += String((curPress && prevPress1 != curPress), DEC);
-    prevPress1 = curPress;
-    sender += "|";
-    curPress = digitalRead(4);
-    sender += String((curPress && prevPress2 != curPress), DEC);
-    prevPress2 = curPress;
+
     Serial.println(sender);
     Serial.flush();
   }
