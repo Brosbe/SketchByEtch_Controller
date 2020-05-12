@@ -36,6 +36,7 @@
             this.lstPorts = new System.Windows.Forms.ListBox();
             this.lblConnection = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.btnDisconnect = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -106,11 +107,22 @@
             this.label3.Tag = "";
             this.label3.Text = "Connection:";
             // 
+            // btnDisconnect
+            // 
+            this.btnDisconnect.Location = new System.Drawing.Point(383, 149);
+            this.btnDisconnect.Name = "btnDisconnect";
+            this.btnDisconnect.Size = new System.Drawing.Size(121, 23);
+            this.btnDisconnect.TabIndex = 9;
+            this.btnDisconnect.Text = "Disconnect";
+            this.btnDisconnect.UseVisualStyleBackColor = true;
+            this.btnDisconnect.Click += new System.EventHandler(this.btnDisconnect_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(524, 181);
+            this.Controls.Add(this.btnDisconnect);
             this.Controls.Add(this.lblConnection);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lstPorts);
@@ -140,6 +152,7 @@
         private System.Windows.Forms.ListBox lstPorts;
         private System.Windows.Forms.Label lblConnection;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnDisconnect;
     }
 }
 

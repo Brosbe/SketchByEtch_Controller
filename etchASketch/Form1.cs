@@ -27,8 +27,8 @@ namespace etchASketch
         {
             communicator = new Communicator();
             timer1.Enabled = true;
-            serialThread = new Thread(communicator.serial);
             prevPorts = SerialPort.GetPortNames();
+            btnDisconnect.Enabled = false;
             lstPorts.DataSource = prevPorts;
             lstPorts.Refresh();
         }
@@ -66,10 +66,16 @@ namespace etchASketch
             }
 
             if (curPorts.Length == 0)
+            {
                 btnConnect.Enabled = false;
-            
+                btnDisconnect.Enabled = false;
+            }
+
             else
+            {
                 btnConnect.Enabled = !communicator.HasConnected;
+                btnDisconnect.Enabled = communicator.HasConnected;
+            }
 
             prevPorts = curPorts;
             lstPorts.Enabled = !communicator.HasConnected;
@@ -78,19 +84,35 @@ namespace etchASketch
         private void Form1_Closing(object sender, FormClosingEventArgs e)
         {
             communicator.End();
+            try
+            {
+                serialThread.Abort();
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            try
+            if (lstPorts.SelectedIndex < 0)
             {
-                communicator.SetPort(lstPorts.SelectedItem.ToString());
-                serialThread.Start();
+                MessageBox.Show("Please select a port", "error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            catch (Exception)
-            {
-                MessageBox.Show("Invalid Port", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            communicator.SetPort(lstPorts.SelectedItem.ToString());
+            serialThread = new Thread(communicator.serial);
+            serialThread.Start();
+        }
+
+        private void btnDisconnect_Click(object sender, EventArgs e)
+        {
+            //timer1.Enabled = false;
+            communicator.End();
+            //btnConnect.Enabled = false;
+            //btnDisconnect.Enabled = false;
+            //Thread.Sleep(500);
+            //timer1.Enabled = true;
         }
     }
 }

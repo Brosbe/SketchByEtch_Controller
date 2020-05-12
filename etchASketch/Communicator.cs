@@ -3,7 +3,9 @@ using System.Windows.Forms;
 using System.IO.Ports;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace etchASketch
 {
@@ -74,9 +76,9 @@ namespace etchASketch
             }
             catch (Exception)
             {
-                HasConnected = false;
-                MessageBox.Show("Somthing went wrong while trying to communicate with the controller", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Task.Run(() => MessageBox.Show("Somthing went wrong while trying to communicate with the controller", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
             }
+            HasConnected = false;
             port.Close();
         }
 
@@ -98,9 +100,9 @@ namespace etchASketch
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+                Task.Run( () => MessageBox.Show("Controller was either not valid or didn't start up yet.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error));
             }
-
+            Loop = true;
         }
 
         private void HandleReceivedDate(object sender, EventArgs e)
@@ -108,20 +110,39 @@ namespace etchASketch
             IsHandling = true;
             if (!HasConnected)
             {
-                if (port.ReadLine() == "?\r")
+                try
                 {
+                    if (port.ReadLine() == "?\r")
+                    {
+                        HasConnected = true;
+                        IsHandling = false;
+                        return;
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Task.Run(() => MessageBox.Show("Could not read serial data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
                     HasConnected = true;
                     IsHandling = false;
                     return;
                 }
                 IsHandling = false;
-                throw new Exception();
+                return;
             }
 
             Point prevVal = new Point(0, 0);
             Point cursorpoint = new Point(0, 0);
             var serialInfo = port.ReadLine();
             serialInfo = serialInfo.Substring(0, serialInfo.Length - 1);
+            var pattern = new Regex("[0-9]{1,4}[,][0-9]{1,4}[|][01]");
+            serialInfo = pattern.Match(serialInfo).ToString();
+            if (!pattern.IsMatch(serialInfo))
+            {
+                Loop = false;
+                HasConnected = false;
+                Task.Run(() => MessageBox.Show("Unexpected data received", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
+                return;
+            }
             string[] split = serialInfo.Split('|');
 
             EtchMode = split[1] == "1";
@@ -149,6 +170,13 @@ namespace etchASketch
         public void End()
         {
             Loop = false;
+            HasConnected = false;
+            EtchMode = false;
+        }
+
+        private async Task UnexpectedData()
+        {
+            MessageBox.Show("Unexpected data received", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
