@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO.Ports;
+using System.Linq;
+using System.Xml.Serialization;
 
 namespace etchASketch
 {
@@ -10,6 +12,7 @@ namespace etchASketch
     {
         public Communicator communicator;
         private Thread serialThread;
+        private string[] prevPorts;
         public Form1()
         {
             InitializeComponent();
@@ -20,13 +23,14 @@ namespace etchASketch
             init();
         }
 
-
-
         private void init()
         {
             communicator = new Communicator();
             timer1.Enabled = true;
             serialThread = new Thread(communicator.serial);
+            prevPorts = SerialPort.GetPortNames();
+            lstPorts.DataSource = prevPorts;
+            lstPorts.Refresh();
         }
 
         private void Update(object sender, EventArgs e)
@@ -42,25 +46,38 @@ namespace etchASketch
                 lblEtchMode.ForeColor = Color.Red;
             }
 
-            if (communicator.IsMouseDown)
+            if (communicator.HasConnected)
             {
-                lblMouseToggle.Text = "On";
-                lblMouseToggle.ForeColor = Color.Green;
+                lblConnection.Text = "On";
+                lblConnection.ForeColor = Color.Green;
             }
+
             else
             {
-                lblMouseToggle.Text = "Off";
-                lblMouseToggle.ForeColor = Color.Red;
+                lblConnection.Text = "Off";
+                lblConnection.ForeColor = Color.Red;
             }
-            lstPorts.DataSource = SerialPort.GetPortNames();
-            lstPorts.Refresh();
-            btnConnect.Enabled = !communicator.HasConnected;
+
+            var curPorts = SerialPort.GetPortNames();
+            if (!curPorts.SequenceEqual(prevPorts))
+            {
+                lstPorts.DataSource = curPorts;
+                lstPorts.Refresh();
+            }
+
+            if (curPorts.Length == 0)
+                btnConnect.Enabled = false;
+            
+            else
+                btnConnect.Enabled = !communicator.HasConnected;
+
+            prevPorts = curPorts;
             lstPorts.Enabled = !communicator.HasConnected;
         }
 
         private void Form1_Closing(object sender, FormClosingEventArgs e)
         {
-            communicator.EndConnection();
+            communicator.End();
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
