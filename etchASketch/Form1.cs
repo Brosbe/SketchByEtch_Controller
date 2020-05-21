@@ -29,6 +29,8 @@ namespace etchASketch
             timer1.Enabled = true;
             prevPorts = SerialPort.GetPortNames();
             btnDisconnect.Enabled = false;
+            btnConnect.Enabled = false;
+            communicator.ProbeAvailablePorts();
             lstPorts.DataSource = prevPorts;
             lstPorts.Refresh();
         }
@@ -63,6 +65,12 @@ namespace etchASketch
             {
                 lstPorts.DataSource = curPorts;
                 lstPorts.Refresh();
+                if (curPorts.Length > 0)
+                {
+                    btnConnect.Enabled = false;
+                    communicator.ProbeAvailablePorts();
+                    btnConnect.Enabled = true;
+                }
             }
 
             if (curPorts.Length == 0)
@@ -88,10 +96,7 @@ namespace etchASketch
             {
                 serialThread.Abort();
             }
-            catch (Exception ex)
-            {
-                
-            }
+            catch (Exception){}
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -101,8 +106,12 @@ namespace etchASketch
                 MessageBox.Show("Please select a port", "error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             communicator.SetPort(lstPorts.SelectedItem.ToString());
-            serialThread = new Thread(communicator.serial);
-            serialThread.Start();
+            if (communicator.HasConnected)
+            {
+                serialThread = new Thread(communicator.serial);
+                serialThread.Name = "serialThread";
+                serialThread.Start();
+            }
         }
 
         private void btnDisconnect_Click(object sender, EventArgs e)

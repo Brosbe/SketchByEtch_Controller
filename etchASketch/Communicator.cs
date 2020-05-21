@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.Drawing;
@@ -26,6 +27,7 @@ namespace etchASketch
         private bool _HasConnected { get; set; }
         private bool _IsHandling { get; set; }
         private bool _Loop { get; set; }
+        private bool _FirstSetup { get; set; }
 
 
         public bool EtchMode
@@ -50,6 +52,12 @@ namespace etchASketch
         {
             get { return _Loop; }
             private set { _Loop = value; }
+        }
+
+        public bool FirstSetup
+        {
+            get { return _FirstSetup; }
+            private set { _FirstSetup = value; }
         }
 
 
@@ -79,16 +87,20 @@ namespace etchASketch
                 Task.Run(() => MessageBox.Show("Somthing went wrong while trying to communicate with the controller", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
             }
             HasConnected = false;
-            port.Close();
+            FirstSetup = true;
+            if (port.IsOpen)
+            {
+                port.Close();
+            }
         }
 
         public void SetPort(string portString)
         {
             port.BaudRate = 19200;
             port.PortName = portString;
-            port.Open();
             try
             {
+                port.Open();
                 port.WriteLine("-");
                 Thread.Sleep(50);
                 if (!HasConnected)
@@ -107,7 +119,11 @@ namespace etchASketch
 
         private void HandleReceivedDate(object sender, EventArgs e)
         {
-            IsHandling = true;
+            //if (FirstSetup)
+            //{
+            //    FirstSetup = false;
+            //    return;
+            //}
             if (!HasConnected)
             {
                 try
@@ -119,7 +135,7 @@ namespace etchASketch
                         return;
                     }
                 }
-                catch (Exception exception)
+                catch (Exception)
                 {
                     Task.Run(() => MessageBox.Show("Could not read serial data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
                     HasConnected = true;
@@ -129,7 +145,7 @@ namespace etchASketch
                 IsHandling = false;
                 return;
             }
-
+            IsHandling = true;
             Point prevVal = new Point(0, 0);
             Point cursorpoint = new Point(0, 0);
             var serialInfo = port.ReadLine();
@@ -172,11 +188,36 @@ namespace etchASketch
             Loop = false;
             HasConnected = false;
             EtchMode = false;
+            FirstSetup = true;
+            if (port.IsOpen)
+            {
+                port.Close();
+            }
         }
 
-        private async Task UnexpectedData()
+        public void ProbeAvailablePorts()
         {
-            MessageBox.Show("Unexpected data received", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            var ports = SerialPort.GetPortNames();
+            if (ports.Length == 0)
+            {
+                return;
+            }
+            foreach (var port in ports)
+            {
+                Probe(port);
+            }
+            Thread.Sleep(2500);
+        }
+
+        private void Probe(string portString)
+        {
+            try
+            {
+                var port = new SerialPort { PortName = portString };
+                port.Open();
+                port.Close();
+            }
+            catch (Exception){ }
         }
     }
 }
