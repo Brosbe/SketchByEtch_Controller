@@ -4,6 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace etchASketch
@@ -20,17 +21,16 @@ namespace etchASketch
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            init();
+            Init();
         }
 
-        private void init()
+        private void Init()
         {
             communicator = new Communicator();
             timer1.Enabled = true;
             prevPorts = SerialPort.GetPortNames();
             btnDisconnect.Enabled = false;
             btnConnect.Enabled = false;
-            communicator.ProbeAvailablePorts();
             lstPorts.DataSource = prevPorts;
             lstPorts.Refresh();
         }
@@ -56,7 +56,7 @@ namespace etchASketch
 
             else
             {
-                lblConnection.Text = "Off";
+                lblConnection.Text = "Off"; 
                 lblConnection.ForeColor = Color.Red;
             }
 
@@ -65,13 +65,17 @@ namespace etchASketch
             {
                 lstPorts.DataSource = curPorts;
                 lstPorts.Refresh();
-                if (curPorts.Length > 0)
+                if (curPorts.Length > prevPorts.Length)
                 {
-                    btnConnect.Enabled = false;
-                    communicator.ProbeAvailablePorts();
-                    btnConnect.Enabled = true;
+                    if (communicator.IsProbing)
+                    {
+                        communicator.IsProbing = false;
+                    }
+
                 }
             }
+
+            btnConnect.Enabled = !communicator.IsProbing;
 
             if (curPorts.Length == 0)
             {
@@ -104,11 +108,13 @@ namespace etchASketch
             if (lstPorts.SelectedIndex < 0)
             {
                 MessageBox.Show("Please select a port", "error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
             }
-            communicator.SetPort(lstPorts.SelectedItem.ToString());
+            btnConnect.Enabled = false;
+            communicator.Probe(lstPorts.SelectedItem.ToString());
             if (communicator.HasConnected)
             {
-                serialThread = new Thread(communicator.serial);
+                serialThread = new Thread(communicator.Serial);
                 serialThread.Name = "serialThread";
                 serialThread.Start();
             }

@@ -27,7 +27,7 @@ namespace etchASketch
         private bool _HasConnected { get; set; }
         private bool _IsHandling { get; set; }
         private bool _Loop { get; set; }
-        private bool _FirstSetup { get; set; }
+        private bool _IsProbing { get; set; }
 
 
         public bool EtchMode
@@ -54,23 +54,22 @@ namespace etchASketch
             private set { _Loop = value; }
         }
 
-        public bool FirstSetup
+        public bool IsProbing
         {
-            get { return _FirstSetup; }
-            private set { _FirstSetup = value; }
+            get { return _IsProbing; }
+            set { _IsProbing = value; }
         }
-
 
         public Communicator()
         {
             port = new SerialPort();
             Loop = true;
-            port.DataReceived += HandleReceivedDate;
         }
 
-        public void serial()
+        public void Serial()
         {
-
+            port.Open();
+            Loop = true;
             try
             {
                 while (Loop)
@@ -87,62 +86,23 @@ namespace etchASketch
                 Task.Run(() => MessageBox.Show("Somthing went wrong while trying to communicate with the controller", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
             }
             HasConnected = false;
-            FirstSetup = true;
             if (port.IsOpen)
             {
                 port.Close();
             }
+            port.DataReceived -= HandleReceivedDate;
         }
 
         public void SetPort(string portString)
         {
             port.BaudRate = 19200;
             port.PortName = portString;
-            try
-            {
-                port.Open();
-                port.WriteLine("-");
-                Thread.Sleep(50);
-                if (!HasConnected)
-                {
-                    port.Close();
-                    throw new Exception();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                Task.Run( () => MessageBox.Show("Controller was either not valid or didn't start up yet.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error));
-            }
-            Loop = true;
         }
 
         private void HandleReceivedDate(object sender, EventArgs e)
         {
-            //if (FirstSetup)
-            //{
-            //    FirstSetup = false;
-            //    return;
-            //}
             if (!HasConnected)
             {
-                try
-                {
-                    if (port.ReadLine() == "?\r")
-                    {
-                        HasConnected = true;
-                        IsHandling = false;
-                        return;
-                    }
-                }
-                catch (Exception)
-                {
-                    Task.Run(() => MessageBox.Show("Could not read serial data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
-                    HasConnected = true;
-                    IsHandling = false;
-                    return;
-                }
-                IsHandling = false;
                 return;
             }
             IsHandling = true;
@@ -188,36 +148,28 @@ namespace etchASketch
             Loop = false;
             HasConnected = false;
             EtchMode = false;
-            FirstSetup = true;
             if (port.IsOpen)
             {
                 port.Close();
             }
+            port.DataReceived -= HandleReceivedDate;
         }
 
-        public void ProbeAvailablePorts()
-        {
-            var ports = SerialPort.GetPortNames();
-            if (ports.Length == 0)
-            {
-                return;
-            }
-            foreach (var port in ports)
-            {
-                Probe(port);
-            }
-            Thread.Sleep(2500);
-        }
-
-        private void Probe(string portString)
+        public void Probe(string portString)
         {
             try
             {
-                var port = new SerialPort { PortName = portString };
-                port.Open();
-                port.Close();
+                var probePort = new SerialPort { PortName = portString, BaudRate = 19200};
+                probePort.Open();
+                Thread.Sleep(2500);
+                probePort.WriteLine("-");
+                Thread.Sleep(50);
+                HasConnected = probePort.ReadLine() == "?\r";
+                probePort.Close();
+                SetPort(portString);
+                port.DataReceived += HandleReceivedDate;
             }
-            catch (Exception){ }
+            catch (Exception){}
         }
     }
 }
