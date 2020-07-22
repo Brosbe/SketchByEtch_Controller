@@ -56,7 +56,7 @@ namespace etchASketch
 
             else
             {
-                lblConnection.Text = "Off"; 
+                lblConnection.Text = "Off";
                 lblConnection.ForeColor = Color.Red;
             }
 
@@ -100,7 +100,7 @@ namespace etchASketch
             {
                 serialThread.Abort();
             }
-            catch (Exception){}
+            catch (Exception) { }
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -121,6 +121,18 @@ namespace etchASketch
         }
 
         private void btnDisconnect_Click(object sender, EventArgs e)
+        {
+            Disconnect();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Disconnect();
+            Form settingsForm = new SettingsForm();
+            settingsForm.ShowDialog();
+        }
+
+        private void Disconnect()
         {
             //timer1.Enabled = false;
             communicator.End();

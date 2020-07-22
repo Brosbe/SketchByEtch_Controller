@@ -37,6 +37,7 @@
             this.lblConnection = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.btnDisconnect = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -64,6 +65,7 @@
             // 
             // btnConnect
             // 
+            this.btnConnect.Font = new System.Drawing.Font("Verdana", 8.25F);
             this.btnConnect.Location = new System.Drawing.Point(382, 120);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(121, 23);
@@ -78,6 +80,7 @@
             // 
             // lstPorts
             // 
+            this.lstPorts.Font = new System.Drawing.Font("Verdana", 8.25F);
             this.lstPorts.FormattingEnabled = true;
             this.lstPorts.Location = new System.Drawing.Point(383, 24);
             this.lstPorts.Name = "lstPorts";
@@ -109,6 +112,7 @@
             // 
             // btnDisconnect
             // 
+            this.btnDisconnect.Font = new System.Drawing.Font("Verdana", 8.25F);
             this.btnDisconnect.Location = new System.Drawing.Point(383, 149);
             this.btnDisconnect.Name = "btnDisconnect";
             this.btnDisconnect.Size = new System.Drawing.Size(121, 23);
@@ -117,11 +121,23 @@
             this.btnDisconnect.UseVisualStyleBackColor = true;
             this.btnDisconnect.Click += new System.EventHandler(this.btnDisconnect_Click);
             // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Verdana", 8.25F);
+            this.button1.Location = new System.Drawing.Point(18, 120);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(84, 52);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Settings";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(524, 181);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnDisconnect);
             this.Controls.Add(this.lblConnection);
             this.Controls.Add(this.label3);
@@ -129,6 +145,7 @@
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.lblEtchMode);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(540, 220);
             this.MinimizeBox = false;
@@ -153,6 +170,7 @@
         private System.Windows.Forms.Label lblConnection;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnDisconnect;
+        private System.Windows.Forms.Button button1;
     }
 }
 
