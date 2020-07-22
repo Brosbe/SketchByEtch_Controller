@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO.Ports;
@@ -14,6 +15,7 @@ namespace etchASketch
         public Communicator communicator;
         private Thread serialThread;
         private string[] prevPorts;
+        private const string Path = @".\Settings.xml";
         public Form1()
         {
             InitializeComponent();
@@ -26,7 +28,26 @@ namespace etchASketch
 
         private void Init()
         {
-            communicator = new Communicator();
+            if (!File.Exists(Path))
+                ShowSettingsNotCreatedDialog();
+            else
+            {
+                var reader = new XmlSerializer(typeof(Settings));
+                var file = File.Open(@".\Settings.xml",FileMode.Open);
+                Settings settings;
+                try
+                {
+                    settings = (Settings)reader.Deserialize(file);
+                    file.Close();
+                    communicator = new Communicator(settings);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Invalid Settings Formatting", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    File.Delete(Path);
+                    communicator = new Communicator();
+                }
+            }
             timer1.Enabled = true;
             prevPorts = SerialPort.GetPortNames();
             btnDisconnect.Enabled = false;
@@ -105,6 +126,11 @@ namespace etchASketch
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
+            if (!File.Exists(Path))
+            {
+                ShowSettingsNotCreatedDialog();
+                return;
+            }
             if (lstPorts.SelectedIndex < 0)
             {
                 MessageBox.Show("Please select a port", "error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -140,6 +166,13 @@ namespace etchASketch
             //btnDisconnect.Enabled = false;
             //Thread.Sleep(500);
             //timer1.Enabled = true;
+        }
+
+        private void ShowSettingsNotCreatedDialog()
+        {
+            MessageBox.Show("Config File not found. Please use the following window to create one", "Error!");
+            Form settingsForm = new SettingsForm();
+            settingsForm.ShowDialog();
         }
     }
 }
