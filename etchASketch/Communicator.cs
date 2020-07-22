@@ -28,7 +28,7 @@ namespace etchASketch
         private bool _IsHandling { get; set; }
         private bool _Loop { get; set; }
         private bool _IsProbing { get; set; }
-
+        private Settings Settings { get; set; }
 
         public bool EtchMode
         {
