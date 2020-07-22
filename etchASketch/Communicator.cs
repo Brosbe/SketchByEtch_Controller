@@ -66,6 +66,13 @@ namespace etchASketch
             Loop = true;
         }
 
+        public Communicator(Settings settings)
+        {
+            port = new SerialPort();
+            Loop = true;
+            Settings = settings;
+        }
+
         public void Serial()
         {
             port.Open();
