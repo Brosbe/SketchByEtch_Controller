@@ -29,7 +29,10 @@ namespace etchASketch
         private void Init()
         {
             if (!File.Exists(Path))
+            { 
                 ShowSettingsNotCreatedDialog();
+                communicator = new Communicator();
+            }
             else
             {
                 var reader = new XmlSerializer(typeof(Settings));

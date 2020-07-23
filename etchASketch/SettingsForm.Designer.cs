@@ -40,6 +40,7 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnAutoSettings = new System.Windows.Forms.Button();
+            this.cboxFullScreen = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // cboxSwapKnobs
@@ -135,7 +136,7 @@
             // btnSave
             // 
             this.btnSave.Font = new System.Drawing.Font("Verdana", 10F);
-            this.btnSave.Location = new System.Drawing.Point(12, 103);
+            this.btnSave.Location = new System.Drawing.Point(12, 130);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 37);
             this.btnSave.TabIndex = 9;
@@ -146,7 +147,7 @@
             // btnCancel
             // 
             this.btnCancel.Font = new System.Drawing.Font("Verdana", 10F);
-            this.btnCancel.Location = new System.Drawing.Point(110, 103);
+            this.btnCancel.Location = new System.Drawing.Point(110, 130);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 37);
             this.btnCancel.TabIndex = 10;
@@ -157,7 +158,7 @@
             // btnAutoSettings
             // 
             this.btnAutoSettings.Font = new System.Drawing.Font("Verdana", 10F);
-            this.btnAutoSettings.Location = new System.Drawing.Point(252, 103);
+            this.btnAutoSettings.Location = new System.Drawing.Point(252, 130);
             this.btnAutoSettings.Name = "btnAutoSettings";
             this.btnAutoSettings.Size = new System.Drawing.Size(185, 37);
             this.btnAutoSettings.TabIndex = 11;
@@ -165,11 +166,24 @@
             this.btnAutoSettings.UseVisualStyleBackColor = true;
             this.btnAutoSettings.Click += new System.EventHandler(this.btnAutoSettings_Click);
             // 
+            // cboxFullScreen
+            // 
+            this.cboxFullScreen.AutoSize = true;
+            this.cboxFullScreen.Font = new System.Drawing.Font("Verdana", 10F);
+            this.cboxFullScreen.Location = new System.Drawing.Point(12, 93);
+            this.cboxFullScreen.Name = "cboxFullScreen";
+            this.cboxFullScreen.Size = new System.Drawing.Size(222, 21);
+            this.cboxFullScreen.TabIndex = 12;
+            this.cboxFullScreen.Text = "Use the absolute full screen";
+            this.cboxFullScreen.UseVisualStyleBackColor = true;
+            this.cboxFullScreen.CheckedChanged += new System.EventHandler(this.cboxFullScreen_CheckedChanged);
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(506, 152);
+            this.ClientSize = new System.Drawing.Size(506, 205);
+            this.Controls.Add(this.cboxFullScreen);
             this.Controls.Add(this.btnAutoSettings);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
@@ -205,5 +219,6 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnAutoSettings;
+        private System.Windows.Forms.CheckBox cboxFullScreen;
     }
 }
