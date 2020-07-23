@@ -52,6 +52,7 @@
             this.cboxSwapKnobs.TabIndex = 0;
             this.cboxSwapKnobs.Text = "Swap X and Y knobs";
             this.cboxSwapKnobs.UseVisualStyleBackColor = true;
+            this.cboxSwapKnobs.CheckedChanged += new System.EventHandler(this.cboxSwapKnobs_CheckedChanged);
             // 
             // cboxInvertX
             // 
@@ -63,6 +64,7 @@
             this.cboxInvertX.TabIndex = 1;
             this.cboxInvertX.Text = "Invert X axis";
             this.cboxInvertX.UseVisualStyleBackColor = true;
+            this.cboxInvertX.CheckedChanged += new System.EventHandler(this.cboxInvertX_CheckedChanged);
             // 
             // cboxInvertY
             // 
@@ -74,6 +76,7 @@
             this.cboxInvertY.TabIndex = 2;
             this.cboxInvertY.Text = "Invert Y axis";
             this.cboxInvertY.UseVisualStyleBackColor = true;
+            this.cboxInvertY.CheckedChanged += new System.EventHandler(this.cboxInvertY_CheckedChanged);
             // 
             // txtKnobsMaxValue
             // 
@@ -149,6 +152,7 @@
             this.btnCancel.TabIndex = 10;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnAutoSettings
             // 
