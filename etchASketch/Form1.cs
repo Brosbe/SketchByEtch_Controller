@@ -154,7 +154,7 @@ namespace etchASketch
         private void button1_Click(object sender, EventArgs e)
         {
             Disconnect();
-            Form settingsForm = new SettingsForm();
+            Form settingsForm = new SettingsForm(communicator.Settings);
             settingsForm.ShowDialog();
         }
 

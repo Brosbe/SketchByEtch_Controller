@@ -28,7 +28,7 @@ namespace etchASketch
         private bool _IsHandling { get; set; }
         private bool _Loop { get; set; }
         private bool _IsProbing { get; set; }
-        private Settings Settings { get; set; }
+        public Settings Settings { get; set; }
 
         public bool EtchMode
         {
@@ -113,8 +113,6 @@ namespace etchASketch
                 return;
             }
             IsHandling = true;
-            Point prevVal = new Point(0, 0);
-            Point cursorpoint = new Point(0, 0);
             var serialInfo = port.ReadLine();
             serialInfo = serialInfo.Substring(0, serialInfo.Length - 1);
             var pattern = new Regex("[0-9]{1,4}[,][0-9]{1,4}[|][01]");
@@ -132,20 +130,8 @@ namespace etchASketch
 
             if (EtchMode)
             {
-                var val = split[0].ToPoint();
-
-                val.Y = 1080 - val.Y;
-
-                val.X += 420;
-                if (val.X != prevVal.X && val.Y != prevVal.Y)
-                {
-                    SetCursorPos(val.X, val.Y);
-                    //cursorpoint.X = val.X;
-                    //cursorpoint.Y = val.Y;
-                    //Cursor.Position = cursorpoint;
-                    //prevVal.X = val.X;
-                    //prevVal.Y = val.Y;
-                }
+                var val = Settings.CalculatePosition(split[0]);
+                SetCursorPos(val.X, val.Y);
             }
             IsHandling = false;
         }
