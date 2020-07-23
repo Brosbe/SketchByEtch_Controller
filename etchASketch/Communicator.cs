@@ -137,7 +137,7 @@ namespace etchASketch
                 val.Y = 1080 - val.Y;
 
                 val.X += 420;
-                if (val.X != prevVal.X || val.Y != prevVal.X)
+                if (val.X != prevVal.X && val.Y != prevVal.Y)
                 {
                     SetCursorPos(val.X, val.Y);
                     //cursorpoint.X = val.X;
