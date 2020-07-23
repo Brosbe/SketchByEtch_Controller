@@ -19,6 +19,7 @@ namespace etchASketch
         public SettingsForm()
         {
             Settings = new Settings();
+            EditSettings = new Settings();
             InitializeComponent();
         }
 
@@ -39,6 +40,7 @@ namespace etchASketch
             cboxInvertX.Checked = Settings.InvertX;
             cboxInvertY.Checked = Settings.InvertY;
             cboxSwapKnobs.Checked = Settings.SwapKnobs;
+            cboxFullScreen.Checked = Settings.SwapKnobs;
             txtKnobsMaxValue.Text = Settings.MaxKnobValue.ToString();
             txtScreenWidth.Text = Settings.ScreenWidth.ToString();
             txtScreenHeight.Text = Settings.ScreenHeight.ToString();
@@ -102,6 +104,11 @@ namespace etchASketch
         private void cboxInvertY_CheckedChanged(object sender, EventArgs e)
         {
             EditSettings.InvertY = cboxInvertY.Checked;
+        }
+
+        private void cboxFullScreen_CheckedChanged(object sender, EventArgs e)
+        {
+            EditSettings.UseFullScreen = cboxFullScreen.Checked;
         }
     }
 }
