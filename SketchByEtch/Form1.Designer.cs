@@ -1,4 +1,4 @@
-﻿namespace etchASketch
+﻿namespace SketchByEtch
 {
     partial class Form1
     {

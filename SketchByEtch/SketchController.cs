@@ -8,15 +8,15 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace etchASketch
+namespace SketchByEtch
 {
     public class Communicator
     {
-        [DllImport("user32.dll")]
-        private static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
+        //[DllImport("user32.dll")]
+        //private static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
 
-        private const int MOUSEEVENTF_LEFTDOWN = 0x02;
-        private const int MOUSEEVENTF_LEFTUP = 0x04;
+        //private const int MOUSEEVENTF_LEFTDOWN = 0x02;
+        //private const int MOUSEEVENTF_LEFTUP = 0x04;
 
         [DllImport("user32.dll")]
         private static extern bool SetCursorPos(int X, int Y);
