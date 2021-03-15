@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
-namespace etchASketch
+namespace SketchByEtch
 {
     public partial class SettingsForm : Form
     {

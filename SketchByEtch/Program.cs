@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 
 
-namespace etchASketch
+namespace SketchByEtch
 {
     static class Program
     {

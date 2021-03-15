@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace etchASketch
+namespace SketchByEtch
 {
     public partial class Form1 : Form
     {

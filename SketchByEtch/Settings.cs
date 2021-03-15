@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace etchASketch
+namespace SketchByEtch
 {
     public class Settings
     {
