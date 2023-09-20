@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO.Ports;
-using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,8 +15,16 @@ namespace SketchByEtch
         //private const int MOUSEEVENTF_LEFTDOWN = 0x02;
         //private const int MOUSEEVENTF_LEFTUP = 0x04;
 
-        [DllImport("user32.dll")]
-        private static extern bool SetCursorPos(int X, int Y);
+        //DLLImport currently not needed in this context. keeping this here for testing/future use
+
+        //[DllImport("user32.dll")]
+
+        //private static extern bool SetCursorPos(int X, int Y);
+
+        //could theoretically look into extending the serialport class for this. seeing that it's the base for the communication and everyhting here is built around that.
+        //would definitely help with cleanliness of the code.
+
+        private Regex pattern = new Regex("[0-9]{1,4}[,][0-9]{1,4}[|][01]");
 
         private SerialPort port;
 
@@ -28,6 +33,8 @@ namespace SketchByEtch
         private bool _IsHandling { get; set; }
         private bool _Loop { get; set; }
         private bool _IsProbing { get; set; }
+        private int _XValue { get; set; }
+        private int _YValue { get; set; }
         public Settings Settings { get; set; }
 
         public bool EtchMode
@@ -58,6 +65,18 @@ namespace SketchByEtch
         {
             get { return _IsProbing; }
             set { _IsProbing = value; }
+        }
+
+        public int XValue
+        {
+            get { return _XValue; }
+            set { _XValue = value; }
+        }
+
+        public int YValue
+        {
+            get { return _YValue; }
+            set { _YValue = value; }
         }
 
         public Communicator()
@@ -115,24 +134,21 @@ namespace SketchByEtch
             IsHandling = true;
             var serialInfo = port.ReadLine();
             serialInfo = serialInfo.Substring(0, serialInfo.Length - 1);
-            var pattern = new Regex("[0-9]{1,4}[,][0-9]{1,4}[|][01]");
             serialInfo = pattern.Match(serialInfo).ToString();
             if (!pattern.IsMatch(serialInfo))
             {
                 Loop = false;
                 HasConnected = false;
-                Task.Run(() => MessageBox.Show("Unexpected data received", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
+                MessageBox.Show("Unexpected data received", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            string[] split = serialInfo.Split('|');
+            string[] boolSplit = serialInfo.Split('|');
 
-            EtchMode = split[1] == "1";
+            EtchMode = boolSplit[1] == "1";
+            string[] posSplit = boolSplit[0].Split(',');
 
-            if (EtchMode)
-            {
-                var val = Settings.CalculatePosition(split[0]);
-                SetCursorPos(val.X, val.Y);
-            }
+            XValue = Convert.ToInt32(posSplit[0]);
+            YValue = Convert.ToInt32(posSplit[0]);
             IsHandling = false;
         }
 
@@ -148,6 +164,10 @@ namespace SketchByEtch
             port.DataReceived -= HandleReceivedDate;
         }
 
+
+        //Arduino serial communication starts up slow. The time of opening a connection and the arduino responding to the first request seems to be around 2 seconds.
+        //Half a second was added just in case.
+        //This will only be called when trying to connect to a serial device to make sure it is in fact the right device.
         public void Probe(string portString)
         {
             try
