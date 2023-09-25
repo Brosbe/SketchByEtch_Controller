@@ -127,7 +127,7 @@ namespace SketchByEtch
             catch (Exception) { }
         }
 
-        private void btnConnect_Click(object sender, EventArgs e)
+        private void BtnConnect_Click(object sender, EventArgs e)
         {
             if (!File.Exists(Path))
             {
@@ -149,12 +149,12 @@ namespace SketchByEtch
             }
         }
 
-        private void btnDisconnect_Click(object sender, EventArgs e)
+        private void BtnDisconnect_Click(object sender, EventArgs e)
         {
             Disconnect();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void BtnSettings_Click(object sender, EventArgs e)
         {
             Disconnect();
             Form settingsForm = new SettingsForm(communicator.Settings);

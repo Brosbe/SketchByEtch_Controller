@@ -46,7 +46,7 @@
             this.label1.Font = new System.Drawing.Font("Verdana", 20F);
             this.label1.Location = new System.Drawing.Point(12, 74);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(194, 32);
+            this.label1.Size = new System.Drawing.Size(193, 32);
             this.label1.TabIndex = 0;
             this.label1.Tag = "";
             this.label1.Text = "Etch Control:";
@@ -58,7 +58,7 @@
             this.lblEtchMode.ForeColor = System.Drawing.Color.Red;
             this.lblEtchMode.Location = new System.Drawing.Point(247, 74);
             this.lblEtchMode.Name = "lblEtchMode";
-            this.lblEtchMode.Size = new System.Drawing.Size(56, 32);
+            this.lblEtchMode.Size = new System.Drawing.Size(55, 32);
             this.lblEtchMode.TabIndex = 1;
             this.lblEtchMode.Tag = "";
             this.lblEtchMode.Text = "Off";
@@ -72,7 +72,7 @@
             this.btnConnect.TabIndex = 5;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            this.btnConnect.Click += new System.EventHandler(this.BtnConnect_Click);
             // 
             // timer1
             // 
@@ -94,7 +94,7 @@
             this.lblConnection.ForeColor = System.Drawing.Color.Red;
             this.lblConnection.Location = new System.Drawing.Point(247, 24);
             this.lblConnection.Name = "lblConnection";
-            this.lblConnection.Size = new System.Drawing.Size(51, 32);
+            this.lblConnection.Size = new System.Drawing.Size(50, 32);
             this.lblConnection.TabIndex = 8;
             this.lblConnection.Tag = "";
             this.lblConnection.Text = "No";
@@ -105,7 +105,7 @@
             this.label3.Font = new System.Drawing.Font("Verdana", 20F);
             this.label3.Location = new System.Drawing.Point(12, 24);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(177, 32);
+            this.label3.Size = new System.Drawing.Size(176, 32);
             this.label3.TabIndex = 7;
             this.label3.Tag = "";
             this.label3.Text = "Connection:";
@@ -119,10 +119,11 @@
             this.btnDisconnect.TabIndex = 9;
             this.btnDisconnect.Text = "Disconnect";
             this.btnDisconnect.UseVisualStyleBackColor = true;
-            this.btnDisconnect.Click += new System.EventHandler(this.btnDisconnect_Click);
+            this.btnDisconnect.Click += new System.EventHandler(this.BtnDisconnect_Click);
             // 
             // button1
             // 
+            this.button1.AccessibleName = "";
             this.button1.Font = new System.Drawing.Font("Verdana", 8.25F);
             this.button1.Location = new System.Drawing.Point(18, 120);
             this.button1.Name = "button1";
@@ -130,7 +131,7 @@
             this.button1.TabIndex = 0;
             this.button1.Text = "Settings";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.BtnSettings_Click);
             // 
             // Form1
             // 
