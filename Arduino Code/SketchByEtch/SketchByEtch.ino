@@ -1,10 +1,9 @@
-//Requires the Responsive analogread library. this can easily be found in the library manager
+//Requires the Responsive analogread library. this can easily be found in the library manager. might end up removing this and handle value smoothing manually or in pc app
 #include <ResponsiveAnalogRead.h>
 
-char value[1];
+char value[1]; 
 char serialDelay[2];
 int delayLength = 0;
-int newDelayLength = 0;
 bool curPress;
 //senddata is used to loop sending serialdata with intervals equal to the delayLength.
 //delays will be done using the millis command as this will allow the arduino to still receive serial data to stop the dataflood.
@@ -13,6 +12,8 @@ ResponsiveAnalogRead analog1(A0, true);
 ResponsiveAnalogRead analog2(A1, true);
 String sender;
 String part;
+
+bool serialLoop = false;
 void setup() {
   // put your setup code here, to run once:
   pinMode(A0, INPUT);
@@ -26,14 +27,76 @@ void setup() {
   //It is simply here to ecord any analog values in a higher resolution so cursor positioning can become more accurate.
 }
 
-void loop() {
+void loop() 
+{
 
-  while(Serial.available())
+  if(Serial.available())
   {
     Serial.readBytes(value, 1);
     switch (value[0])
     {
-    case '.':
+    case 'S':
+      serialLoop = true;
+      if(Serial.readBytes(value, 1))
+      {
+        if(value[1] == 'N')
+        {
+          delayLength = 0;
+          Serial.flush();
+          break;
+        }
+        if(value[1] == 'D')
+        {
+          int delayMs;
+          Serial.readBytes(serialDelay, 2);
+          //left to right, like a normal number
+          delayMs += serialDelay[0];
+          delayMs <<= 8;
+          delayMs += serialDelay[1];
+          delayLength = delayMs;
+        }
+      }
+      Serial.flush();
+      break;
+
+    case '-':
+      Serial.println('?');
+      Serial.flush();
+      break;
+
+    default:
+      Serial.flush();
+      break;
+    }
+  }
+
+  while(serialLoop)
+  {
+    analog1.update();
+    analog2.update();
+    sender = String((int)(analog1.getValue()), DEC);
+    sender += ",";
+    part = String((int)(analog2.getValue()), DEC);
+    sender += part;
+    sender += "|";
+    sender += String((digitalRead(3)), DEC);
+
+    CheckLoop();
+    Serial.println(sender);
+    Serial.flush();
+  }
+} 
+
+void CheckLoop()
+{
+  if(Serial.available())
+  {
+    Serial.readBytes(value, 1);
+    if(value[0] == 'E') serialLoop = false;
+  }
+}
+
+/*
       analog1.update();
       analog2.update();
       sender = String((int)(analog1.getValue()), DEC);
@@ -45,28 +108,4 @@ void loop() {
 
       Serial.println(sender);
       Serial.flush();
-      break;
-
-    case '-':
-      Serial.println('?');
-      Serial.flush();
-      break;
-
-    case 'd':
-      newDelayLength = 0;
-      Serial.readBytes(serialDelay, 2);
-      for (byte i = 0; i < 2; i++)
-      {
-        newDelayLength <<= 8;
-        newDelayLength += serialDelay[i];
-      }
-      delayLength = newDelayLength;
-
-      break;
-
-    default:
-      Serial.flush();
-      break;
-    }
-  }
-} 
+*/
