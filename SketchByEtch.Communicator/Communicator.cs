@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace SketchByEtch.Communicator
 {
-    public class Communicator : SerialPort
+    public class SketchCommunicator : SerialPort
     {
         private Regex pattern = new Regex("[0-9]{1,4}[,][0-9]{1,4}[|][01]");
         private bool _EtchMode { get; set; }
@@ -52,13 +52,14 @@ namespace SketchByEtch.Communicator
             set { _YValue = value; }
         }
 
-        public Communicator()
+        public SketchCommunicator()
         {
-
+            HasConnected = false;
         }
 
         public void SetPort(string portString)
         {
+            //baud rate is a hardcoded value for now, will change this in the future
             base.BaudRate = 19200;
             base.PortName = portString;
         }
@@ -85,26 +86,37 @@ namespace SketchByEtch.Communicator
             string[] posSplit = boolSplit[0].Split(',');
 
             XValue = Convert.ToInt32(posSplit[0]);
-            YValue = Convert.ToInt32(posSplit[0]);
+            YValue = Convert.ToInt32(posSplit[1]);
             IsHandling = false;
         }
+
 
         public void Probe(string portString)
         {
             try
             {
-                var probePort = new SerialPort { PortName = portString, BaudRate = 19200 };
-                probePort.Open();
+                SetPort(portString);
+                base.Open();
                 Thread.Sleep(2500);
-                probePort.WriteLine("-");
+                base.WriteLine("-");
                 Thread.Sleep(50);
-                HasConnected = probePort.ReadLine() == "?\r";
-                probePort.Close();
-                base.PortName = portString;
+                HasConnected = base.ReadLine() == "?\r";
                 base.DataReceived += HandleReceivedDate;
             }
             catch (Exception) { }
         }
 
+        public void Start()
+        {
+            base.WriteLine("SN");
+        }
+
+        public void End()
+        {
+            HasConnected = false;
+            base.WriteLine("E");
+            base.Close();
+            base.DataReceived -= HandleReceivedDate;
+        }
     }
 }

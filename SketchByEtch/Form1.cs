@@ -7,13 +7,15 @@ using System.IO.Ports;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using SketchByEtch.Communicator;
+using Newtonsoft.Json.Serialization;
 
 namespace SketchByEtch
 {
     public partial class Form1 : Form
     {
-        public Communicator communicator;
-        private Thread serialThread;
+        public SketchCommunicator communicator;
+        private SettingsForm settingsForm;
         private string[] prevPorts;
         private const string Path = @".\Settings.xml";
         public Form1()
@@ -31,7 +33,7 @@ namespace SketchByEtch
             if (!File.Exists(Path))
             { 
                 ShowSettingsNotCreatedDialog();
-                communicator = new Communicator();
+                communicator = new SketchCommunicator();
             }
             else
             {
@@ -42,13 +44,13 @@ namespace SketchByEtch
                 {
                     settings = (Settings)reader.Deserialize(file);
                     file.Close();
-                    communicator = new Communicator(settings);
+                    communicator = new SketchCommunicator();
                 }
                 catch (Exception)
                 {
                     MessageBox.Show("Invalid Settings Formatting", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     File.Delete(Path);
-                    communicator = new Communicator();
+                    communicator = new SketchCommunicator();
                 }
             }
             timer1.Enabled = true;
@@ -57,6 +59,7 @@ namespace SketchByEtch
             btnConnect.Enabled = false;
             lstPorts.DataSource = prevPorts;
             lstPorts.Refresh();
+            settingsForm = new SettingsForm();
         }
 
         private void Update(object sender, EventArgs e)
@@ -115,16 +118,14 @@ namespace SketchByEtch
 
             prevPorts = curPorts;
             lstPorts.Enabled = !communicator.HasConnected;
+
+            T_testread1.Text = communicator.XValue.ToString();
+            T_testread2.Text = communicator.YValue.ToString();
         }
 
         private void Form1_Closing(object sender, FormClosingEventArgs e)
         {
-            communicator.End();
-            try
-            {
-                serialThread.Abort();
-            }
-            catch (Exception) { }
+            if(communicator.HasConnected)communicator.End();
         }
 
         private void BtnConnect_Click(object sender, EventArgs e)
@@ -143,9 +144,7 @@ namespace SketchByEtch
             communicator.Probe(lstPorts.SelectedItem.ToString());
             if (communicator.HasConnected)
             {
-                serialThread = new Thread(communicator.Serial);
-                serialThread.Name = "serialThread";
-                serialThread.Start();
+                communicator.Start();
             }
         }
 
@@ -157,7 +156,6 @@ namespace SketchByEtch
         private void BtnSettings_Click(object sender, EventArgs e)
         {
             Disconnect();
-            Form settingsForm = new SettingsForm(communicator.Settings);
             settingsForm.ShowDialog();
         }
 

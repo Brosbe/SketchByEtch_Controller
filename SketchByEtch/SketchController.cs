@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SketchByEtch
 {
-    public class Communicator
+    public class CommunicatorOld
     {
         //[DllImport("user32.dll")]
         //private static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
@@ -79,13 +79,13 @@ namespace SketchByEtch
             set { _YValue = value; }
         }
 
-        public Communicator()
+        public CommunicatorOld()
         {
             port = new SerialPort();
             Loop = true;
         }
 
-        public Communicator(Settings settings)
+        public CommunicatorOld(Settings settings)
         {
             port = new SerialPort();
             Loop = true;

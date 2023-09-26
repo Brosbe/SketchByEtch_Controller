@@ -98,5 +98,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SketchByEtch.Communicator\SketchByEtch.Communicator.csproj">
+      <Project>{ceb060c0-006b-44b5-9a80-5761d6c5a44b}</Project>
+      <Name>SketchByEtch.Communicator</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

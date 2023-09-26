@@ -38,6 +38,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.btnDisconnect = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.T_testread1 = new System.Windows.Forms.Label();
+            this.T_testread2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -133,11 +135,31 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.BtnSettings_Click);
             // 
+            // T_testread1
+            // 
+            this.T_testread1.AutoSize = true;
+            this.T_testread1.Location = new System.Drawing.Point(146, 135);
+            this.T_testread1.Name = "T_testread1";
+            this.T_testread1.Size = new System.Drawing.Size(35, 13);
+            this.T_testread1.TabIndex = 10;
+            this.T_testread1.Text = "label2";
+            // 
+            // T_testread2
+            // 
+            this.T_testread2.AutoSize = true;
+            this.T_testread2.Location = new System.Drawing.Point(227, 135);
+            this.T_testread2.Name = "T_testread2";
+            this.T_testread2.Size = new System.Drawing.Size(35, 13);
+            this.T_testread2.TabIndex = 11;
+            this.T_testread2.Text = "label2";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(524, 181);
+            this.Controls.Add(this.T_testread2);
+            this.Controls.Add(this.T_testread1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnDisconnect);
             this.Controls.Add(this.lblConnection);
@@ -172,6 +194,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnDisconnect;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label T_testread1;
+        private System.Windows.Forms.Label T_testread2;
     }
 }
 
