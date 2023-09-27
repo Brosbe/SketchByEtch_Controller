@@ -7,24 +7,23 @@ namespace SketchByEtch
 {
     public partial class SettingsForm : Form
     {
-        private Settings Settings;
+        private Settings _settings;
         public SettingsForm()
         {
-            Settings = new Settings();
             InitializeComponent();
         }
 
         public SettingsForm(Settings settings)
         {
             InitializeComponent();
-            Settings = settings;
-            cboxInvertX.Checked = Settings.InvertX;
-            cboxInvertY.Checked = Settings.InvertY;
-            cboxSwapKnobs.Checked = Settings.SwapKnobs;
-            cboxFullScreen.Checked = Settings.SwapKnobs;
-            txtKnobsMaxValue.Text = Settings.MaxKnobValue.ToString();
-            txtScreenWidth.Text = Settings.ScreenWidth.ToString();
-            txtScreenHeight.Text = Settings.ScreenHeight.ToString();
+            _settings = settings;
+            cboxInvertX.Checked = _settings.InvertX;
+            cboxInvertY.Checked = _settings.InvertY;
+            cboxSwapKnobs.Checked = _settings.SwapKnobs;
+            cboxFullScreen.Checked = _settings.SwapKnobs;
+            txtKnobsMaxValue.Text = _settings.MaxKnobValue.ToString();
+            txtScreenWidth.Text = _settings.ScreenWidth.ToString();
+            txtScreenHeight.Text = _settings.ScreenHeight.ToString();
         }
 
         private void Txt_KeyPress(object sender, KeyPressEventArgs e)
@@ -52,16 +51,16 @@ namespace SketchByEtch
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            Settings.ScreenHeight = int.Parse(txtScreenHeight.Text);
-            Settings.ScreenWidth = int.Parse(txtScreenWidth.Text);
-            Settings.InvertX = cboxInvertX.Checked;
-            Settings.InvertY = cboxInvertY.Checked;
-            Settings.MaxKnobValue = int.Parse(txtKnobsMaxValue.Text);
-            Settings.UseFullScreen = cboxFullScreen.Checked;
-            Settings.SwapKnobs = cboxSwapKnobs.Checked;
+            _settings.ScreenHeight = int.Parse(txtScreenHeight.Text);
+            _settings.ScreenWidth = int.Parse(txtScreenWidth.Text);
+            _settings.InvertX = cboxInvertX.Checked;
+            _settings.InvertY = cboxInvertY.Checked;
+            _settings.MaxKnobValue = int.Parse(txtKnobsMaxValue.Text);
+            _settings.UseFullScreen = cboxFullScreen.Checked;
+            _settings.SwapKnobs = cboxSwapKnobs.Checked;
             var writer = new XmlSerializer(typeof(Settings));
             FileStream file = File.Create(@".\Settings.xml");
-            writer.Serialize(file, Settings);
+            writer.Serialize(file, _settings);
             file.Close();
             Close();
         }
@@ -73,14 +72,7 @@ namespace SketchByEtch
 
         public void ShowDialog(Settings settings)
         {
-            txtKnobsMaxValue.Text = settings.MaxKnobValue.ToString();
-            txtScreenHeight.Text = settings.ScreenHeight.ToString();
-            txtScreenWidth.Text = settings.ScreenWidth.ToString();
-
-            cboxFullScreen.Checked = settings.UseFullScreen;
-            cboxInvertX.Checked = settings.InvertX;
-            cboxInvertY.Checked = settings.InvertY;
-            cboxSwapKnobs.Checked = settings.SwapKnobs;
+            _settings = settings;
             base.ShowDialog();
         }
     }
