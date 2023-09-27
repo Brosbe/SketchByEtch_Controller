@@ -17,25 +17,47 @@ namespace SketchByEtch
         public int ScreenWidth { get; set; }
         public int ScreenHeight { get; set; }
 
-        //at the moment this only accounts for a screen in landscape mode. support for portrait mode will come later
+
         public int[] CalculatePosition(int xPos, int yPos)
         {
-            //xPos = (int)(xPos / (UseFullScreen ? GetScreenWidthToKnobRatio() : GetScreenHeightToKnobRatio()));
+            if (SwapKnobs)
+            {
+                int swapper = xPos;
+                xPos = yPos;
+                yPos = swapper;
+            }
+
+            if (ScreenWidth >= ScreenHeight)
+            {
+                if (UseFullScreen)
+                {
+                    xPos = (int)(xPos / GetScreenWidthToKnobRatio());
+                }
+                else
+                {
+                    xPos = (int)(xPos / GetScreenHeightToKnobRatio());
+                    xPos += (ScreenWidth - ScreenHeight) / 2;
+                }
+
+                yPos = (int)(yPos / GetScreenHeightToKnobRatio());
+
+                return new[] { xPos, yPos };
+            }
+
             if (UseFullScreen)
             {
-                xPos = (int)(xPos / GetScreenWidthToKnobRatio());
+                yPos = (int)(yPos / GetScreenHeightToKnobRatio());
             }
             else
             {
-                xPos = (int)(xPos / GetScreenHeightToKnobRatio());
-                xPos += (ScreenWidth - ScreenHeight) / 2;
+                yPos = (int)(yPos / GetScreenWidthToKnobRatio());
+                yPos += (ScreenHeight - ScreenWidth) / 2;
             }
 
-
-
-            yPos = (int)(yPos / GetScreenHeightToKnobRatio());
+            xPos = (int)(xPos / GetScreenWidthToKnobRatio());
 
             return new[] { xPos, yPos };
+
         }
 
         private double GetScreenHeightToKnobRatio()
