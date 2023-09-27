@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using SketchByEtch.Communicator;
 using Newtonsoft.Json.Serialization;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 
 namespace SketchByEtch
 {
@@ -23,7 +24,7 @@ namespace SketchByEtch
         private SettingsForm settingsForm;
         private Settings settings;
         private string[] prevPorts;
-        private const string Path = @".\Settings.xml";
+        private const string Path = @".\Settings.json";
         public Form1()
         {
             InitializeComponent();
@@ -43,12 +44,9 @@ namespace SketchByEtch
             }
             else
             {
-                var reader = new XmlSerializer(typeof(Settings));
-                var file = File.Open(Path, FileMode.Open);
                 try
                 {
-                    settings = (Settings)reader.Deserialize(file);
-                    file.Dispose();
+                    settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(Path));
                 }
                 catch (Exception)
                 {

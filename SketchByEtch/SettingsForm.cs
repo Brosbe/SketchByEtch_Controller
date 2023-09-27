@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -7,6 +8,7 @@ namespace SketchByEtch
 {
     public partial class SettingsForm : Form
     {
+        private const string Path = @".\Settings.json";
         private Settings _settings;
         public SettingsForm()
         {
@@ -58,10 +60,7 @@ namespace SketchByEtch
             _settings.MaxKnobValue = int.Parse(txtKnobsMaxValue.Text);
             _settings.UseFullScreen = cboxFullScreen.Checked;
             _settings.SwapKnobs = cboxSwapKnobs.Checked;
-            var writer = new XmlSerializer(typeof(Settings));
-            FileStream file = File.Create(@".\Settings.xml");
-            writer.Serialize(file, _settings);
-            file.Close();
+            File.WriteAllText(Path, JsonConvert.SerializeObject(_settings));
             Close();
         }
 
