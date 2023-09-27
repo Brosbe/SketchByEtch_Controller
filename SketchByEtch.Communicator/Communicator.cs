@@ -121,5 +121,10 @@ namespace SketchByEtch.Communicator
                 base.DataReceived -= HandleReceivedDate;
             }
         }
+
+        public void pause()
+        {
+            base.WriteLine("E");
+        }
     }
 }
