@@ -37,14 +37,14 @@ namespace SketchByEtch
         private void Init()
         {
             if (!File.Exists(Path))
-            { 
+            {
+                settingsForm = new SettingsForm();
                 ShowSettingsNotCreatedDialog();
-                communicator = new SketchCommunicator();
             }
             else
             {
                 var reader = new XmlSerializer(typeof(Settings));
-                var file = File.Open(Path,FileMode.Open);
+                var file = File.Open(Path, FileMode.Open);
                 try
                 {
                     settings = (Settings)reader.Deserialize(file);
@@ -55,8 +55,9 @@ namespace SketchByEtch
                     MessageBox.Show("Invalid Settings Formatting", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     File.Delete(Path);
                 }
-                communicator = new SketchCommunicator();
+                settingsForm = new SettingsForm(settings);
             }
+            communicator = new SketchCommunicator();
             TimerUpdate.Enabled = true;
             TimerCursor.Enabled = false;
             prevPorts = SerialPort.GetPortNames();
@@ -64,7 +65,6 @@ namespace SketchByEtch
             btnConnect.Enabled = false;
             lstPorts.DataSource = prevPorts;
             lstPorts.Refresh();
-            settingsForm = new SettingsForm(settings);
         }
 
         private void Update(object sender, EventArgs e)
@@ -170,8 +170,8 @@ namespace SketchByEtch
         {
             //timer1.Enabled = false;
             communicator.End();
-            //btnConnect.Enabled = false;
-            //btnDisconnect.Enabled = false;
+            btnConnect.Enabled = true;
+            btnDisconnect.Enabled = false;
             //Thread.Sleep(500);
             //timer1.Enabled = true;
         }
@@ -179,12 +179,13 @@ namespace SketchByEtch
         private void ShowSettingsNotCreatedDialog()
         {
             MessageBox.Show("Config File not found. Please use the following window to create one", "Error!");
-            Form settingsForm = new SettingsForm();
-            settingsForm.ShowDialog();
+            settings = new Settings();
+            settingsForm.ShowDialog(settings);
         }
 
         private void CursorUpdate(object sender, EventArgs e)
         {
+            if (!communicator.EtchMode) return;
             var positions = settings.CalculatePosition(communicator.XValue, communicator.YValue);
             SetCursorPos(positions[0], positions[1]);
         }
