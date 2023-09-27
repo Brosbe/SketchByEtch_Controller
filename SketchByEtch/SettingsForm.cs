@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 
 namespace SketchByEtch
 {
@@ -19,13 +18,7 @@ namespace SketchByEtch
         {
             InitializeComponent();
             _settings = settings;
-            cboxInvertX.Checked = _settings.InvertX;
-            cboxInvertY.Checked = _settings.InvertY;
-            cboxSwapKnobs.Checked = _settings.SwapKnobs;
-            cboxFullScreen.Checked = _settings.SwapKnobs;
-            txtKnobsMaxValue.Text = _settings.MaxKnobValue.ToString();
-            txtScreenWidth.Text = _settings.ScreenWidth.ToString();
-            txtScreenHeight.Text = _settings.ScreenHeight.ToString();
+            UpdateShownSettings();
         }
 
         private void Txt_KeyPress(object sender, KeyPressEventArgs e)
@@ -73,6 +66,23 @@ namespace SketchByEtch
         {
             _settings = settings;
             base.ShowDialog();
+        }
+
+        public void ShowDialog()
+        {
+            UpdateShownSettings();
+            base.ShowDialog();
+        }
+
+        private void UpdateShownSettings()
+        {
+            cboxInvertX.Checked = _settings.InvertX;
+            cboxInvertY.Checked = _settings.InvertY;
+            cboxSwapKnobs.Checked = _settings.SwapKnobs;
+            cboxFullScreen.Checked = _settings.SwapKnobs;
+            txtKnobsMaxValue.Text = _settings.MaxKnobValue.ToString();
+            txtScreenWidth.Text = _settings.ScreenWidth.ToString();
+            txtScreenHeight.Text = _settings.ScreenHeight.ToString();
         }
     }
 }
