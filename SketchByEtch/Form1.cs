@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Threading;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 using SketchByEtch.Communicator;
-using Newtonsoft.Json.Serialization;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
@@ -25,6 +21,8 @@ namespace SketchByEtch
         private Settings settings;
         private string[] prevPorts;
         private const string Path = @".\Settings.json";
+
+
         public Form1()
         {
             InitializeComponent();
@@ -166,12 +164,9 @@ namespace SketchByEtch
 
         private void Disconnect()
         {
-            //timer1.Enabled = false;
             communicator.End();
             btnConnect.Enabled = true;
             btnDisconnect.Enabled = false;
-            //Thread.Sleep(500);
-            //timer1.Enabled = true;
         }
 
         private void ShowSettingsNotCreatedDialog()
