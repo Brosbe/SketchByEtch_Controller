@@ -32,7 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblEtchMode = new System.Windows.Forms.Label();
             this.btnConnect = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.TimerUpdate = new System.Windows.Forms.Timer(this.components);
             this.lstPorts = new System.Windows.Forms.ListBox();
             this.lblConnection = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -40,6 +40,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.T_testread1 = new System.Windows.Forms.Label();
             this.T_testread2 = new System.Windows.Forms.Label();
+            this.TimerCursor = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // label1
@@ -76,9 +77,9 @@
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.BtnConnect_Click);
             // 
-            // timer1
+            // TimerUpdate
             // 
-            this.timer1.Tick += new System.EventHandler(this.Update);
+            this.TimerUpdate.Tick += new System.EventHandler(this.Update);
             // 
             // lstPorts
             // 
@@ -153,6 +154,11 @@
             this.T_testread2.TabIndex = 11;
             this.T_testread2.Text = "label2";
             // 
+            // TimerCursor
+            // 
+            this.TimerCursor.Interval = 16;
+            this.TimerCursor.Tick += new System.EventHandler(this.CursorUpdate);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -188,7 +194,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblEtchMode;
         private System.Windows.Forms.Button btnConnect;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer TimerUpdate;
         private System.Windows.Forms.ListBox lstPorts;
         private System.Windows.Forms.Label lblConnection;
         private System.Windows.Forms.Label label3;
@@ -196,6 +202,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label T_testread1;
         private System.Windows.Forms.Label T_testread2;
+        private System.Windows.Forms.Timer TimerCursor;
     }
 }
 

@@ -113,10 +113,13 @@ namespace SketchByEtch.Communicator
 
         public void End()
         {
-            HasConnected = false;
-            base.WriteLine("E");
-            base.Close();
-            base.DataReceived -= HandleReceivedDate;
+            if (HasConnected)
+            {
+                HasConnected = false;
+                base.WriteLine("E");
+                base.Close();
+                base.DataReceived -= HandleReceivedDate;
+            }
         }
     }
 }

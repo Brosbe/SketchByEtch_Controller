@@ -9,13 +9,19 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using SketchByEtch.Communicator;
 using Newtonsoft.Json.Serialization;
+using System.Runtime.InteropServices;
 
 namespace SketchByEtch
 {
     public partial class Form1 : Form
     {
+        [DllImport("user32.dll")]
+
+        private static extern bool SetCursorPos(int X, int Y);
+
         public SketchCommunicator communicator;
         private SettingsForm settingsForm;
+        private Settings settings;
         private string[] prevPorts;
         private const string Path = @".\Settings.xml";
         public Form1()
@@ -38,28 +44,27 @@ namespace SketchByEtch
             else
             {
                 var reader = new XmlSerializer(typeof(Settings));
-                var file = File.Open(@".\Settings.xml",FileMode.Open);
-                Settings settings;
+                var file = File.Open(Path,FileMode.Open);
                 try
                 {
                     settings = (Settings)reader.Deserialize(file);
-                    file.Close();
-                    communicator = new SketchCommunicator();
+                    file.Dispose();
                 }
                 catch (Exception)
                 {
                     MessageBox.Show("Invalid Settings Formatting", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     File.Delete(Path);
-                    communicator = new SketchCommunicator();
                 }
+                communicator = new SketchCommunicator();
             }
-            timer1.Enabled = true;
+            TimerUpdate.Enabled = true;
+            TimerCursor.Enabled = false;
             prevPorts = SerialPort.GetPortNames();
             btnDisconnect.Enabled = false;
             btnConnect.Enabled = false;
             lstPorts.DataSource = prevPorts;
             lstPorts.Refresh();
-            settingsForm = new SettingsForm();
+            settingsForm = new SettingsForm(settings);
         }
 
         private void Update(object sender, EventArgs e)
@@ -145,12 +150,14 @@ namespace SketchByEtch
             if (communicator.HasConnected)
             {
                 communicator.Start();
+                TimerCursor.Enabled = true;
             }
         }
 
         private void BtnDisconnect_Click(object sender, EventArgs e)
         {
             Disconnect();
+            TimerCursor.Enabled = false;
         }
 
         private void BtnSettings_Click(object sender, EventArgs e)
@@ -174,6 +181,12 @@ namespace SketchByEtch
             MessageBox.Show("Config File not found. Please use the following window to create one", "Error!");
             Form settingsForm = new SettingsForm();
             settingsForm.ShowDialog();
+        }
+
+        private void CursorUpdate(object sender, EventArgs e)
+        {
+            var positions = settings.CalculatePosition(communicator.XValue, communicator.YValue);
+            SetCursorPos(positions[0], positions[1]);
         }
     }
 }
