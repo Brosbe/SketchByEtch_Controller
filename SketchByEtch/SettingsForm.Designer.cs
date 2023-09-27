@@ -53,7 +53,6 @@
             this.cboxSwapKnobs.TabIndex = 0;
             this.cboxSwapKnobs.Text = "Swap X and Y knobs";
             this.cboxSwapKnobs.UseVisualStyleBackColor = true;
-            this.cboxSwapKnobs.CheckedChanged += new System.EventHandler(this.cboxSwapKnobs_CheckedChanged);
             // 
             // cboxInvertX
             // 
@@ -65,7 +64,6 @@
             this.cboxInvertX.TabIndex = 1;
             this.cboxInvertX.Text = "Invert X axis";
             this.cboxInvertX.UseVisualStyleBackColor = true;
-            this.cboxInvertX.CheckedChanged += new System.EventHandler(this.cboxInvertX_CheckedChanged);
             // 
             // cboxInvertY
             // 
@@ -77,7 +75,6 @@
             this.cboxInvertY.TabIndex = 2;
             this.cboxInvertY.Text = "Invert Y axis";
             this.cboxInvertY.UseVisualStyleBackColor = true;
-            this.cboxInvertY.CheckedChanged += new System.EventHandler(this.cboxInvertY_CheckedChanged);
             // 
             // txtKnobsMaxValue
             // 
@@ -176,7 +173,6 @@
             this.cboxFullScreen.TabIndex = 12;
             this.cboxFullScreen.Text = "Use the absolute full screen";
             this.cboxFullScreen.UseVisualStyleBackColor = true;
-            this.cboxFullScreen.CheckedChanged += new System.EventHandler(this.cboxFullScreen_CheckedChanged);
             // 
             // SettingsForm
             // 
