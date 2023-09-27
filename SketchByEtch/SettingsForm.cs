@@ -31,13 +31,13 @@ namespace SketchByEtch
 
         }
 
-        private void btnAutoSettings_Click(object sender, EventArgs e)
+        private void BtnAutoSettings_Click(object sender, EventArgs e)
         {
             txtScreenWidth.Text = Screen.PrimaryScreen.Bounds.Width.ToString();
             txtScreenHeight.Text = Screen.PrimaryScreen.Bounds.Height.ToString();
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void BtnSave_Click(object sender, EventArgs e)
         {
 
             if (txtScreenWidth.Text.Trim() == string.Empty || txtScreenHeight.Text.Trim() == string.Empty || txtKnobsMaxValue.Text.Trim() == string.Empty)
@@ -57,7 +57,7 @@ namespace SketchByEtch
             Close();
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void BtnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
