@@ -158,8 +158,16 @@ namespace SketchByEtch
 
         private void BtnSettings_Click(object sender, EventArgs e)
         {
-            Disconnect();
+            if (communicator.HasConnected)
+            {
+                communicator.pause();
+                settingsForm.ShowDialog();
+                communicator.Start();
+                return;
+            }
+
             settingsForm.ShowDialog();
+
         }
 
         private void Disconnect()
